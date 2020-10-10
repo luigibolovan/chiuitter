@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.view_home.*
+import ro.upt.ac.chiuitter.ComposeActivity.Companion.EXTRA_TEXT
 
 class HomeActivity : AppCompatActivity() {
 
@@ -22,10 +23,9 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun shareChiuit(text: String) {
         val sendIntent = Intent().apply {
-            // TODO 1: Configure to support text sending/sharing and then attach the text as intent's extra.
-
-
-
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
         }
 
         val intentChooser = Intent.createChooser(sendIntent, "")
@@ -37,11 +37,10 @@ class HomeActivity : AppCompatActivity() {
     Defines an *explicit* intent which will be used to start ComposeActivity.
      */
     private fun composeChiuit() {
-        // TODO 2: Create an explicit intent which points to ComposeActivity.
+        val composeIntent = Intent(this, ComposeActivity::class.java)
 
-
-        // TODO 3: Start a new activity with the previously defined intent.
         // We start a new activity that we expect to return the acquired text as the result.
+        startActivityForResult(composeIntent, COMPOSE_REQUEST_CODE)
 
     }
 
@@ -54,11 +53,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun extractText(data: Intent?) {
         data?.let {
-            // TODO 5: Extract the text from result intent.
+            val receivedText : String? = data.getStringExtra(EXTRA_TEXT)
 
-
-            // TODO 6: Check if text is not null or empty, then set the new "chiuit" content.
-
+            if(!receivedText.isNullOrEmpty()){
+                txv_content.text = receivedText
+            }
 
         }
     }
